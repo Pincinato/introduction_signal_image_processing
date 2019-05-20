@@ -1,0 +1,313 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{graphicx} %This allows to include eps figures
+
+% This is to include code
+\usepackage{listings}
+\usepackage{xcolor}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\lstdefinestyle{Python}{
+    language        = Python,
+    basicstyle      = \ttfamily,
+    keywordstyle    = \color{blue},
+    keywordstyle    = [2] \color{teal}, % just to check that it works
+    stringstyle     = \color{green},
+    commentstyle    = \color{red}\ttfamily
+}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{reflection}[2][Reflection]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{proposition}[2][Proposition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+
+\begin{document}
+
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+
+%\renewcommand{\qedsymbol}{\filledbox}
+
+\title{Homework 2}%replace X with the appropriate number
+\author{Thiago Henrique Pincinato\\ %replace with your name
+Introduction to Signal and Image Processing
+}
+
+\maketitle
+
+\section{Linear Filtering}
+Linear Filtering is an operation, in which a kernel is used to determine how the neighborhood pixel will influence the new value of the center pixel. Such a technique can be used to difference proposes as, for instance, removal of pepper and salts noise (e.g box filter) or enhance of edge (e.g Sobel) 
+\subsection{}
+The function boxfilter(n) can be summarized as a creation of a matrix $nxn$ with all elements equal to 1 divide by $nxn$ ($np.ones((n, n)) / (n x n)$.)
+
+In the development phase, the condition $boxfilter(n).sum() == 1$ was used to assure that the sum of the filter was equal to 1.
+
+\subsection{}
+
+The function $myconv2$ was implement by acquiring the weight and height of filter and image ($np.shape$), applying padding in the image ($np.pad$), flipping the filter ($np.flit$ ), realizing a multiplication element by element and summing the result of the multiplications ($np.sum$ and $np.multiply$).
+
+The result of such a function is a full convolution.
+
+\subsection{}
+A boxfilter of size 11  was created and this filter was used in a given image ($cat.jpg$). The result of such a convolution  can be seen in the figure  \ref{fig:boxfilter}.
+
+As expected the filter blurred the image. This happens because the box filter is an average filter that, in our case, computes the average of the center pixel and its 120 neighboring pixels.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[scale = 0.35]{boxfilter.png}
+ \caption{$Original$  $and$  $filtered$  $image$}
+ \label{fig:boxfilter}
+\end{figure}
+
+\subsection{}
+
+In order to write a function that returns a 1D Gaussian filter, an array x is created ($np.linspace$ ), then the Gaussian equation is applied ($np.exp$ and $np.power$) .
+
+Furthermore, the argument filter$_-$length is incremented of 1 if, and only if, is value is a even number.  
+
+As result, the function $gauss1d$ has no for loop, which improve efficiency and compactness.
+
+ 
+\subsection{}
+
+The function $gauss2d$ was implemented based on the functions $gauss1d$ and $myconv2$ . Firstly, the function $gauss1d$ is called, returning a 1D Gaussian array. After that, the 1D Gaussian array is copied and transposed.  Finally, the function $myconv2$ is called with the 1D Gaussian array and 1D Gaussian array transposed, returning the final 2D Gaussian filter.
+
+The resulting 2D Gaussian filter is illustrated in the figure  \ref{fig:2dgaussianfilter}.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[scale = 0.35]{2dgaussianfilter.png}
+ \caption{$2D$ $Gaussian$ $filter$ }
+ \label{fig:2dgaussianfilter}
+\end{figure}
+
+\subsection{}
+
+The previous filter (exercise 1.5) was used in the image $cat.jpg$ and the result is shown in the figure \ref{fig:gaussianfilter}.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[scale = 0.8]{gaussianfilter.png}
+ \caption{$Gaussian$ $filter$ }
+ \label{fig:gaussianfilter}
+\end{figure}
+
+Different form the boxfilter, the Gaussian filter use different weight for the neighborhood, closer pixels are more weighted than farther ones. In addition, the value of sigma plays an important role in the Gaussian distribution. Lower values of sigma tend to preserve more the image, given that the neighborhood is low weighted, and thus, the central pixel is even more relevant. Higher sigma values, however, tend to blur more the image, due to the similar distribution of weight in the neighboring pixels. When sigma goes to infinity, we have a boxfilter. 
+
+
+Gaussian filters are frequently used because they can represent better the effect of optical lens when compared with boxfilters.
+
+\subsection{}
+
+
+One could apply the convolution of the image with the 1D Gaussian filter and after an another convolution, with the result of the first convolution and the transpose of the 1D Gaussian filter. The result would  be exactly the same as applying the convolution with 2D Gaussian filter.
+
+The mathematical demonstration that the result would be the same can be seen below:
+
+\[
+    I*2DG = F -> 2DG = 1DG*(1DG') -> (I*1DG)*1DG' = F
+\]
+
+Where $I$ is the image, $2DG$ is 2D Gaussian filter, $1DG$ is 1D Gaussian filter, $1DG'$ is the transpose of the 1D Gaussian filter and $F$ is the filtered image.
+
+
+Note that this operation is possible due to the fact that 2D Gaussian filter are symmetric and separable.
+
+When doing the filtering process with 1D Gaussian filter and its transpose, we are realizing $m + m$ multiplication by pixel, instead of $mxm$ (2D Gaussian filter). It means that filtering in two steps is of 1 first order $O(1)$ and 2D is a second order process $O(2)$.
+
+Therefore, we can enhance our efficiency and velocity.
+
+\subsection{}
+
+To show the concept developed in the previous exercise, a plot of filter size vs. computation time was done . The plot \ref{fig:ComputationTime} elucidates the size-time relation when using 2D box filter of increasing size (3,100) and the method described in subsection 1.7.
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[scale = 0.35]{ComputationTime.png}
+ \caption{$Computation$ $Time$ }
+ \label{fig:ComputationTime}
+\end{figure}
+
+As we can see, the 1D filtering approach is more efficient than 2D approach. 
+
+At the beginning we can notice that the 2D approach is faster, which may happens due to function calls and how my code was implemented. Nevertheless, as the size of the filter increases, it is evident how much the 1D approach is better (0(1) against 0(2)).
+
+\section{Finding edges}
+Edges are extremely rich in information about the shape and details in images. Therefore, it detection is an important tool for image processing.
+
+Edge are generated due to discontinuities in depth, illumination, reflectance and surface orientation.
+\subsection{}
+By using the functions of the previous exercise a 1D derivative of Gaussian Y ($Gy$) and a 1D derivative Gaussian in X ($Gx$) were generates.
+
+In my case, the chosen derivative operator were $ dx $ $ = $ $[-1, 0, 1]$ and $ dy $ $ = $ $[-1; 0; 1]$ .
+
+$Gx$ and $Gy$ can be seen in the figure \ref{fig:derivativeGaussian}
+
+\begin{figure}[h]
+ \centering
+ \includegraphics[scale = 0.7]{derivativeGaussian.png}
+ \caption{$Gx$ $and$ $Gy$ }
+ \label{fig:derivativeGaussian}
+\end{figure}
+We can clearly notice the effect of $dy$ and $dx$ over the Gaussian filter.  
+
+\subsection{}
+An edge magnitude image was obtained by , basically, filtering the image with the filters $Gx$ (to generate $Ix$) and $Gy$ (to generate $Iy$). Then, the  magnitude and the gradient orientation are acquired (function $np.sqrt$ and $np.power$  and $np.angle$).
+The result obtained is elucidated in the figure \ref{fig:edge_mag}
+\begin{figure}[h!]
+ \centering
+ \includegraphics[scale = 0.35]{edge_mag.png}
+ \caption{$edge$ $magnitude$ $map$}
+ \label{fig:edge_mag}
+\end{figure}
+\newline
+\newline
+\newline
+\newline
+\newline
+\subsection{}
+
+The edge images of particular directions were coded by using the function $np.where$ and logical operators. The result of an image test ($circle.jpg$) can be seen in the figure \ref{fig:circle_directions}.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[scale = 0.40]{circle_directions.png}
+ \caption{$edge$ $images$ $of$ $particular$ $directions$ $in$ $a$ $circle$}
+ \label{fig:circle_directions}
+\end{figure}
+
+
+The value chosen for $r$ was 25. Others values were tested, but higher values of threshold leads to missing important edge, and lower values leads to an huge amount of edge that are not representatives. 
+This difference between the threshold can be observed in the figure \ref{fig:diff_thresholds}. The first subplot is result of a $r$ $=$ $10$, the second $r$ $=$ $25$ and the last (button) $r$ $=$ $80$.
+\begin{figure}[h!]
+ \centering
+ \includegraphics[scale = 0.40]{edge_thresholds.png}
+ \caption{ $Different$ $r$ $values$}
+ \label{fig:diff_thresholds}
+\end{figure}
+\newline
+\newline
+\newline
+\newline
+\newline
+\newline
+\newline
+\subsection{}
+Non-maximum suppression is an technique used to make edge thinner. In such a technique the pixel in an edge with higher value in a certain direction is maintained and the others are set to zero. The idea is to remove the blurred of the edge by finding the local maximum.
+
+The results of the non-maximum suppression applied on the images $circle.jpg$ and $bird.jpg$ were shown in the figures 
+\ref{fig:nonMaxCircle} and  \ref{fig:nonMaxBird}.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[scale = 0.40]{nonMaxCircle.png}
+ \caption{ $Non-maximum$ $suppression$ $circle$}
+ \label{fig:nonMaxCircle}
+\end{figure}
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[scale = 0.40]{nonMaxBird.png}
+ \caption{ $Non-maximum$ $suppression$ $bird$}
+ \label{fig:nonMaxBird}
+\end{figure}
+
+When looking at figure \ref{fig:nonMaxCircle} , it seems that the final image (max suppression) has some holes. However, as shown in the figure \ref{fig:nonMaxCircleZoom}, the circle is complete and the non-maximum suppression works perfectly fine.
+\newline
+\newline
+\newline
+\newline
+\begin{figure}[h!]
+ \centering
+ \includegraphics[scale = 0.40]{nonMaxCircleZoom.png}
+ \caption{ $Non-maximum$ $suppression$ $circle$ $zoom$}
+ \label{fig:nonMaxCircleZoom}
+\end{figure}
+
+\section{Corner detection}
+
+Corner detection is technique used to obtain features of an image. It is frequently utilized in computer vision  for  different task, such as, for instance, object recognition and motion detection.  
+\subsection{}
+Harris corner detection is a method based on the placing of a square on the region of interest. The square is replaced (moved) in all direction and the deviation of the gradients are observed. This deviation is then used to determine if the region of analyze is a corner or not. 
+
+For the implementation of the Harris corner detection the functions $scipy.signal.convolve$,  $np.multiply$ , $np.linalg.det$ and $np.trace$ were used.
+
+The values of sigma, k and window size are preserved, 0.2,0.1 and 5x5 respectively.
+
+
+\subsection{}
+
+The algorithm implemented in the previous exercise (3.1) was used in the image $chessboard.jpeg$.
+
+At the end, a threshold  on R was applied ($R>2$) to better visualize the results, which is shown in the figure \ref{fig:HarrisCorner}.
+
+The results shows the ability of the algorithm to detect corner. Furthermore, we can recognize the effect that the light source has in the corner detection. The reflections of light on the Chess pieces are detected as corner with a right value of R. Some corner were also missed due to the parameters sigma, k and window size.
+
+\begin{figure}[h!]
+ \centering
+ \includegraphics[scale = 0.30]{HarrisCorner.png}
+ \caption{ $Harris$ $Corner$ $Detection$}
+ \label{fig:HarrisCorner}
+\end{figure}
+
+\subsection{}
+The function $scipy.ndimage.rotate$  was utilized to rotate the image (45 degrees). After that, the same function of the exercise 3.2 was called.
+The result is elucidated in the figure \ref{fig:HarrisCornerRotated}
+
+We can notice that, besides the rotation, the detection of the corners is similar with the result of the previous exercise. That shows the rotational invariant property of the algorithm.
+\begin{figure}[h!]
+ \centering
+ \includegraphics[scale = 0.30]{HarrisCornerRotated.png}
+ \caption{ $Harris$ $Corner$ $Detection,$ $rotated$ $image$}
+ \label{fig:HarrisCornerRotated}
+\end{figure}
+ 
+\subsection{}
+The function $scipy.misc.imresize$  was utilized to downscale the image (50 percent). After that, the same function of the exercise 3.2 was called.
+The result can be seen in the figure \ref{fig:HarrisCornerDownScaled}
+
+We can remark that the detection of the corners is different from the result of the exercise 3.2. The values of R did completely changed , and thus, the threshold must be adapted to the new range of R values . Therefore, we can point out that the Harris Corner Detection algorithm is size variant.
+\begin{figure}[h!]
+ \centering
+ \includegraphics[scale = 0.30]{HarrisCornerDownScaled.png}
+ \caption{ $Harris$ $Corner$ $Detection,$ $down-scaled$ $image$}
+ \label{fig:HarrisCornerDownScaled}
+\end{figure}
+
+\subsection{}
+
+Looking at the results from (3.2), (3.3) and (3.4) we can say that Harris Corner Detection is invariant to rotation and variant to size. 
+
+Harris Corner Detection is based on the computation of R, that can be done by the following formula:
+
+ \[
+ 
+ R = det(M) - k(trace(M))^{2}=\lambda _{1}\lambda _{2}-k(\lambda _{1}+\lambda _{2})^{2} 
+
+\]
+
+By looking at this equation, we can say that R is dependent of the eigenvalues of the matrix M. Eigenvalues  by definition are independent of any rotation in M. Therefore, a rotation in the image would generate a rotation in M, which would not change the values of R , and thus, the Harris Corner Detection is invariant to rotation.
+
+Nevertheless, a change in size would leads to a change in the eigenvalues, making Harris algorithm variant to size.
+\end{document}

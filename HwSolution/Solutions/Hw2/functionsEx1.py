@@ -65,7 +65,7 @@ def gauss2d(sigma, filter_size=10):
     # @ gauss2d_filter  : 2D gaussian filter
 
     # Generating 1D gauss
-    gauss1d_filter=gauss1d(sigma,filter_size)
+    gauss1d_filter = gauss1d(sigma,filter_size)
     # Convolution of 1D gauss and its transpose
     gauss2d_filter = myconv2(gauss1d_filter,gauss1d_filter.T)
     return gauss2d_filter
