@@ -7,7 +7,7 @@ import matplotlib.patches as patches
 import GraphBasedTest as gb
 import scipy
 
-DEBUG = 1
+DEBUG = 0
 
 
 def find_top_bottom_left_right(img_gray):
@@ -100,8 +100,6 @@ def crop_image(img_, mask):
 
 def enhance_contrast(img_gray_):
     out_img_ = cv2.equalizeHist(img_gray_)
-    #out_img_[np.where(out_img_ > 190)] = 255
-    #out_img_[np.where(out_img_ < 50)] = 0
     return out_img_
 
 
@@ -121,3 +119,34 @@ def segment_image(img_gray, sigma=3, k=200, min_=50, debug=0):
     out = np.divide(out, np.amax(out))
     cropped_mask = crop_image(my_mask, my_mask)
     return out, cropped_image, cropped_mask
+
+
+def test_fill_contour(img_gray):
+    (top, bottom, left, right) = find_top_bottom_left_right(img_gray)
+    my_mask = using_grab_cut(top, bottom, left, right, img_gray)
+    cropped_image = crop_image(img_gray, my_mask)
+    cropped_image = enhance_contrast(cropped_image)
+    new_image = np.zeros([cropped_image.shape[0], cropped_image.shape[1]])
+    cropped_image_rgb = np.zeros([cropped_image.shape[0], cropped_image.shape[1], 3])
+    cropped_image_rgb[:, :, 0] = np.copy(cropped_image)
+    cropped_image_rgb[:, :, 1] = new_image #np.copy(cropped_image)
+    cropped_image_rgb[:, :, 2] = new_image #np.copy(cropped_image)
+    contours, hierarchy = detect_contours(cropped_image)
+    draw_contour(cropped_image_rgb, contours)
+    new_image[np.where(cropped_image_rgb[:,:,1] == 255)]=255
+    return new_image
+
+def detect_contours(grabcut_image_):
+    cv_image = cv2.UMat(np.multiply(np.divide(grabcut_image_, np.amax(grabcut_image_)), 255).astype('uint8'))
+    cv_image = cv2.GaussianBlur(cv_image, (5, 5), 0)
+    cv_image = cv2.Canny(cv_image, 0, 250)
+    contours_, hierarchy_ = cv2.findContours(cv_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    return contours_, hierarchy_
+
+
+def draw_contour(img_, contours_):
+    cv2.drawContours(img_, contours_, 2, (0, 255, 0), thickness=cv2.FILLED)
+
+
+def fill_countour(img_,contours_):
+    cv2.fillPoly(img_, pts=[contours_], color=(255, 255, 255))

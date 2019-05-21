@@ -1,3 +1,5 @@
+
+
 import matplotlib.pyplot as plt
 import numpy as np
 from skimage import feature
@@ -21,17 +23,6 @@ def count_pixels(section):
     return np.sum((section > 0))
 
 
-def detect_contours(grabcut_image_):
-    cv_image = cv2.UMat(np.multiply(np.divide(grabcut_image_, np.amax(grabcut_image_)), 255).astype('uint8'))
-    cv_image = cv2.Canny(cv_image, 0, 250)
-    contours_, hierarchy_ = cv2.findContours(cv_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    return contours_, hierarchy_
-
-
-def draw_contour(img_,contours_):
-    cv2.drawContours(img_, contours_, -1, (0, 255, 0), 3)
-
-
 def compute_oct_thickness(cropped_image_):
     points_to_analyse = np.where((cropped_image_ > 0) == True)
     measurement =[]
@@ -46,7 +37,7 @@ def compute_oct_thickness(cropped_image_):
 
 
 def get_hist(gray_img_):
-    (hist_, ed) = np.histogram(gray_img_, bins=np.arange(256))
+    (hist_, ed) = np.histogram(gray_img_, bins=np.arange(25500))
     return np.argwhere(hist_ != 0), hist_[np.where(hist_ != 0)]
 
 
@@ -89,61 +80,6 @@ def remove_low_density_black_pixel(masks_, img_, threshold, threshold_black_pixe
     return new_masks
 
 
-# we need to improve the line detection system
-def detect_line(input_):
-    points_to_analyse = np.where((input_ > 0) == True)
-    top_ = points_to_analyse[0][0]
-    bottom_ = points_to_analyse[0][len(points_to_analyse[1]) - 1]
-    left_ = np.amin(points_to_analyse[1])
-    right_ = np.amax(points_to_analyse[1])
-    height = bottom_ - top_
-    weight = right_ - left_
-    if weight > height * 10:
-        ack = True
-    else:
-        if height < 3:
-            ack = True
-        else:
-            ack = False
-    return ack
-
-
-def remove_lines(masks_):
-    new_masks = []
-    for actual_mask in masks_:
-        is_a_line = detect_line(actual_mask )
-        if is_a_line == False:
-            new_masks.append(actual_mask)
-    return new_masks
-
-
-def detect_abnormal(input_, oct_thickness_h_, oct_thickness_w_):
-    points_to_analyse = np.where((input_ > 0) == True)
-    top_ = points_to_analyse[0][0]
-    bottom_ = points_to_analyse[0][len(points_to_analyse[1]) - 1]
-    left_ = np.amin(points_to_analyse[1])
-    right_ = np.amax(points_to_analyse[1])
-    height = bottom_ - top_
-    weight = right_ - left_
-    if 2*weight > oct_thickness_w_:
-        ack = True
-    else:
-        if 2*height > oct_thickness_h_:
-            ack = True
-        else:
-            ack = False
-    return ack
-
-
-def remove_abnormal_candidates(masks_,oct_thickness_h_, oct_thickness_w_):
-    new_masks = []
-    for actual_mask in masks_:
-        abnormal = detect_abnormal(actual_mask, oct_thickness_h_, oct_thickness_w_)
-        if abnormal == False:
-            new_masks.append(actual_mask)
-    return new_masks
-
-
 def compute_pixel_density(actual_mask):
     points_to_analyse = np.where((actual_mask > 0) == True)
     top_ = points_to_analyse[0][0]
@@ -182,42 +118,94 @@ def remove_in_border(masks_, img_):
     return new_masks
 
 
+def detect_possible_ilm(img_):
+    count = np.sum(img_ == 0)
+    area = img_.shape[1]
+    ack = False
+    if count >= area:
+        ack = True
+    return ack
+
+
+def remove_above_ilm(masks_, img_, depth_to_use=3):
+    new_masks = []
+    for actual_mask in masks_:
+        m_points_to_analyse = np.where((actual_mask > 0) == True)
+        m_top_ = m_points_to_analyse[0][0]
+        m_left_ = np.amin(m_points_to_analyse[1])
+        m_right_ = np.amax(m_points_to_analyse[1])
+        if (m_top_ - depth_to_use > 0):
+            if detect_possible_ilm(img_[m_top_ - depth_to_use :m_top_, m_left_ :m_right_]) == False:
+                new_masks.append(actual_mask)
+    return new_masks
+
+
+def detect_possible_rpe(img_,mask_, thre_white=180, thr_amount_white=0.7):
+    count = np.sum(np.multiply(img_, mask_) > thre_white)
+    m_points_to_analyse = np.where((mask_ > 0) == True)
+    m_left_ = np.amin(m_points_to_analyse[1])
+    m_right_ = np.amax(m_points_to_analyse[1])
+    weight = (m_right_ - m_left_)# *thr_amount_white
+    ack = False
+    if count > weight:
+        ack = True
+    return ack
+
+
+def remove_above_rpe(masks_, img_, depth_to_use=5, threshold_white=200):
+    new_masks = []
+    for actual_mask in masks_:
+        m_points_to_analyse = np.where((actual_mask > 0) == True)
+        m_bottom_ = m_points_to_analyse[0][len(m_points_to_analyse[1]) - 1]
+        if m_bottom_ + depth_to_use < img_.shape[0]:
+            actual_mask_aux = np.roll(actual_mask, depth_to_use, axis=0)
+            actual_mask_aux = actual_mask - actual_mask_aux
+            actual_mask_aux[np.where(actual_mask_aux > 0)] = 0
+            actual_mask_aux[np.where(actual_mask_aux < 0)] = 1
+            if detect_possible_rpe(img_, actual_mask_aux, threshold_white) == True:
+                new_masks.append(actual_mask)
+    return new_masks
+
 # Implement remove regions that are inside a single region, and thus, does not touch two + more different regions
 
 
-def detect_SNF(grabcut_image, cropped_image, grabcut_mask, maximum_total_pixels=0.025, threshold_black_pixel=50, minimum_black_density=0.3, minimum_pixel_density=0.3):
-    # percentage of the total pixel that a region is allowed to have
-    # maximum_total_pixels = 0.025
-    # threshold value for black pixel
-    # threshold_black_pixel = 50
-    # minimum black pixel density required for a certain region
-    # minimum_black_density = 0.3
-    # minimum pixel density required for a certain region
-    # minimum_pixel_density = 0.3
-    # contours, hierarchy = detect_contours(grabcut_image)
-    oct_thickness_h, oct_thickness_w = compute_oct_thickness(cropped_image)
-    oct_pixels = count_pixels(grabcut_mask)
+def find_SNF_mask(grabcut_image, cropped_image, grabcut_mask, maximum_total_pixels=0.035, threshold_black_pixel=30, minimum_black_density=0.5, minimum_pixel_density=0.3):
+    # oct_thickness_h, oct_thickness_w = compute_oct_thickness(cropped_image)
+    # oct_pixels = count_pixels(grabcut_mask)
     # rgb to gray conversion
     gray_img = utils.rgb_2_gray(grabcut_image)
     # applying grabcut mask to remove the background region
     gray_img = np.multiply(gray_img, grabcut_mask)
     hist = get_hist(gray_img)
-    hist = remove_large_regions(hist, oct_pixels, maximum_total_pixels)
-    #mask = single_mask_from_histrogram(gray_img, hist)
+    # print("mask before remove large region " + str(hist[1].__len__() ))
+    # hist = remove_large_regions(hist, oct_pixels, maximum_total_pixels)
     masks = creating_masks_from_histogram(gray_img, hist)
+    print("mask before remove low density black pixel " + str(masks.__len__() ))
     masks = remove_low_density_black_pixel(masks, cropped_image, minimum_black_density, threshold_black_pixel)
-    masks = remove_lines(masks)
-    # remove_abnormal_candidates not tested yet
-    # masks = remove_abnormal_candidates(masks, oct_thickness_h, oct_thickness_w)
-    masks = remove_low_density_candidates(masks, minimum_pixel_density)
+    ##masks = remove_low_density_candidates(masks, minimum_pixel_density)
+    print("mask before remove in border " + str(masks.__len__() ))
     masks = remove_in_border(masks, cropped_image)
-    i = 0
-    for actual in masks:
-        plt.figure(i+30)
-        plt.imshow(np.multiply(actual, cropped_image), cmap='gray')
-        i = i+1
+    print("mask before remove above ilm " + str(masks.__len__() ))
+    masks = remove_above_ilm(masks, cropped_image)
+    print("mask before remove above rpe " + str(masks.__len__() ))
+    masks = remove_above_rpe(masks, cropped_image)
+    print("mask at the end " + str(masks.__len__() ))
+    return masks
+
+
+def detect_SNF(grabcut_image, cropped_image, grabcut_mask, maximum_total_pixels=0.035, threshold_black_pixel=30, minimum_black_density=0.5, minimum_pixel_density=0.3):
+    # percentage of the total pixel that a region is allowed to have
+    # maximum_total_pixels = 0.025
+    # threshold value for black pixel
+    # threshold_black_pixel = 30
+    # minimum black pixel density required for a certain region
+    # minimum_black_density = 0.5
+    # minimum pixel density required for a certain region
+    # minimum_pixel_density = 0.3
+    masks = find_SNF_mask(grabcut_image, cropped_image, grabcut_mask, maximum_total_pixels=0.035, threshold_black_pixel=30, minimum_black_density=0.5, minimum_pixel_density=0.3)
     if masks.__len__() > 0:
         ack = True
     else:
         ack = False
     return ack
+

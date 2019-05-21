@@ -31,12 +31,23 @@ min_ = 250# 50 200 #200 #50  #
 #tester.test_segmentation(img_SRF[7:9], sigma, k, min_)
 # showing graphs
 
+#tester.test_detection(img_NoSRF[10:11], sigma, k, min_)
+# Corrected not detected
+# 0, 1, 2, 3,6,7,8,9,11,12, 13, 14,
+# Actual errors
+# 4,5,10
 
-tester.test_detection(img_SRF[4:7], sigma, k, min_)
+tester.test_dection_SNF(img_SRF[14:], sigma, k, min_)
 
+# Correct detected
+# 2,3,5,6,7,8,9,14
+# 11! one region detected more than it should
+
+# Actual error (! can be corrected, other demand change in segmentation
+# 0, 1, 4, 10, 12, 13
 #
 #TP = tester.test_detection_positive_rate(img_SRF, sigma, k, min_)
-#TN = tester.test_detection_negative_rate(img_NoSRF)
+#TN = tester.test_detection_negative_rate(img_NoSRF, sigma, k, min_)
 #print("Detection of SNF:  " + str(TP))
 #print("Detection of NoSNF:  " + str(TN))
 plt.show()

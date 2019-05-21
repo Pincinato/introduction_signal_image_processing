@@ -83,7 +83,7 @@ def test_segmentation(img_array, sigma, k, min_):
         j = j + 2
 
 
-def test_detection(img_array, sigma, k , min_, show=1):
+def test_detection(img_array, sigma, k , min_):
     detection_result =[]
     for i in np.arange(img_array.__len__()):
         print("image " + str(i + 1) + "/" + str(img_array.__len__()))
@@ -94,30 +94,68 @@ def test_detection(img_array, sigma, k , min_, show=1):
             img_gray = img_array[i]
         # Segmentation part -> to have plots , debug = 1
         (grabcut_image, cropped_image, grabcut_mask) = sg.segment_image(img_gray, sigma, k, min_)
-        if show == 1 :
-            plt.figure(i + 19)
-            plt.imshow(grabcut_image)
-            plt.figure(i+20)
-            plt.imshow(cropped_image)
         elapsed_time = time.time() - start_time
         print("Segmentation time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(int(elapsed_time % 60)) + " seconds")
         start_time = time.time()
-        if show == 1:
-            plt.figure(i + 21)
         detection_result.append(dt.detect_SNF(grabcut_image, cropped_image, grabcut_mask))
         elapsed_time = time.time() - start_time
         print("Classification time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(int(elapsed_time % 60)) + " seconds")
         print("image "+str(i+1)+"/"+str(img_array.__len__())+" done")
-        if show == 1:
-            plt.show()
     return detection_result
 
 
 def test_detection_positive_rate(img_array_, sigma, k , min_):
-    images_with_SRF = test_detection(img_array_, sigma, k , min_, show=0)
+    images_with_SRF = test_detection(img_array_, sigma, k , min_)
     return np.sum(images_with_SRF) / (img_array_.__len__())
 
 
 def test_detection_negative_rate(img_array_, sigma, k , min_):
-    images_with_SRF = test_detection(img_array_, sigma, k , min_, show=0)
-    return ((img_array_.__len__()) - np.sum(images_with_SRF)) / (img_array_.__len__())
+    images_with_NoSRF = test_detection(img_array_, sigma, k , min_)
+    return ((img_array_.__len__()) - np.sum(images_with_NoSRF)) / (img_array_.__len__())
+
+
+def test_dection_SNF(img_array, sigma, k, min_, save_or_plot=1):
+    for i in np.arange(img_array.__len__()):
+        print("image " + str(i + 1) + "/" + str(img_array.__len__()))
+        start_time = time.time()
+        if len(img_array[i].shape) == 3:
+            img_gray = img_array[i][:, :, 0]
+        else:
+            img_gray = img_array[i]
+        # Segmentation part -> to have plots , debug = 1
+        (seg_image, cropped_image, grabcut_mask) = sg.segment_image(img_gray, sigma, k, min_)
+        elapsed_time = time.time() - start_time
+        print("Segmentation time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(int(elapsed_time % 60)) + " seconds")
+        start_time = time.time()
+        mask = dt.find_SNF_mask(seg_image, cropped_image, grabcut_mask)
+        new_mask = np.zeros([cropped_image.shape[0], cropped_image.shape[1]])
+        for ind in np.arange(mask.__len__()):
+            new_mask = new_mask + mask[ind]
+        new_mask[np.where(new_mask > 0)] = 255
+        if save_or_plot == 1:
+            plt.figure(i)
+            plt.subplot(3, 2, 1)
+            plt.title('Original Image')
+            plt.imshow(img_gray, cmap='gray')
+            plt.subplot(3, 2, 2)
+            plt.title('Cropped image (GraphCut)')
+            plt.imshow(cropped_image, cmap='gray')
+            plt.subplot(3, 2, 3)
+            plt.title('Segmentation')
+            plt.imshow(seg_image)
+            plt.subplot(3, 2, 4)
+            plt.title('SNF detection')
+            plt.imshow(new_mask, cmap='gray')
+            plt.subplot(3, 2, 6)
+            plt.title('Final  result')
+            plt.imshow(cropped_image, cmap='gray')
+            plt.imshow(new_mask, alpha=0.5)
+        if save_or_plot == 0:
+            output_img = np.zeros([cropped_image.shape[0], cropped_image.shape[1],3])
+            output_img[:, :, 0] = cropped_image
+            output_img[:, :, 1] = cropped_image
+            output_img[:, :, 2] = new_mask
+            cv2.imwrite("OutputImages/output_image-" + str(i) + ".jpg",output_img)
+        elapsed_time = time.time() - start_time
+        print("Classification time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(int(elapsed_time % 60)) + " seconds")
+        print("image "+str(i+1)+"/"+str(img_array.__len__())+" done")

@@ -17,7 +17,7 @@ def extract_mask_middle_layers(img_gray_):
 
 def rgb_2_gray(img_):
     out_ = np.multiply(img_[:, :, 0], 0.3) + np.multiply(img_[:, :, 1], 0.59) + np.multiply(img_[:, :, 2], 0.11)
-    out_ = np.multiply(out_, 255).astype('uint8')
+    out_ = np.multiply(out_, 25500).astype('uint16')
     return out_
 
 def subplot(figure_number, suplot_number, plot_1, plot_2,title1, title2, op1, op2):
