@@ -1,0 +1,178 @@
+\hypertarget{namespaceMyTester}{}\section{My\+Tester Namespace Reference}
+\label{namespaceMyTester}\index{My\+Tester@{My\+Tester}}
+
+
+My Tester aims to test the principal functions of the project.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespaceMyTester_a6cc53fb240261f322f8f2b311d4c8b9d}{test\+\_\+grab\+\_\+cut} (img\+\_\+array)
+\begin{DoxyCompactList}\small\item\em It tests the function using\+\_\+grab\+\_\+cut for a array of images. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceMyTester_a581b270d248a0cd1d06d9b7b508b1a94}{test\+\_\+seg\+\_\+k\+\_\+m\+\_\+sigma} (img\+\_\+array)
+\begin{DoxyCompactList}\small\item\em It tests the segmentation pathway for a array of images, using several combinations of the parameters k, min and sigma . \end{DoxyCompactList}\item 
+def \hyperlink{namespaceMyTester_aca4cd4a6cf37238d7d0c60764a2c0d35}{test\+\_\+segmentation} (img\+\_\+array, sigma, k, min\+\_\+)
+\begin{DoxyCompactList}\small\item\em It tests the segmentation pathway. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceMyTester_ad56fe3114535af39d7584621f94deda5}{test\+\_\+detection} (img\+\_\+array, sigma, k, min\+\_\+)
+\begin{DoxyCompactList}\small\item\em It tests the detection pathway. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceMyTester_a7676c871b930c3678e168307c05b10ba}{test\+\_\+detection\+\_\+positive\+\_\+rate} (img\+\_\+array\+\_\+, sigma, k, min\+\_\+)
+\begin{DoxyCompactList}\small\item\em It tests the detection pathway, presuming that all images have a S\+NF. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceMyTester_a0eb2b65bdc144e87a44a4da58d38cba7}{test\+\_\+detection\+\_\+negative\+\_\+rate} (img\+\_\+array\+\_\+, sigma, k, min\+\_\+)
+\begin{DoxyCompactList}\small\item\em It tests the detection pathway, presuming that all images do not have a S\+NF. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceMyTester_a987df9a91b15345e3a3ed238d19c894f}{test\+\_\+detection\+\_\+\+S\+NF} (img\+\_\+array, sigma, k, min\+\_\+, save\+\_\+or\+\_\+plot=1)
+\begin{DoxyCompactList}\small\item\em It tests the detection pathway, plot the results or save the result in the Output folder. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+My Tester aims to test the principal functions of the project. 
+
+Those test consist of routine calls, time measurement and parameters deviations \begin{DoxyAuthor}{Author}
+Thiago Pincinato and Tamara Melle 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespaceMyTester_ad56fe3114535af39d7584621f94deda5}\label{namespaceMyTester_ad56fe3114535af39d7584621f94deda5}} 
+\index{My\+Tester@{My\+Tester}!test\+\_\+detection@{test\+\_\+detection}}
+\index{test\+\_\+detection@{test\+\_\+detection}!My\+Tester@{My\+Tester}}
+\subsubsection{\texorpdfstring{test\+\_\+detection()}{test\_detection()}}
+{\footnotesize\ttfamily def My\+Tester.\+test\+\_\+detection (\begin{DoxyParamCaption}\item[{}]{img\+\_\+array,  }\item[{}]{sigma,  }\item[{}]{k,  }\item[{}]{min\+\_\+ }\end{DoxyParamCaption})}
+
+
+
+It tests the detection pathway. 
+
+In additional, it measures the time needed to execute such a function. 
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+array} & Array containing all images to be tested. \\
+\hline
+{\em sigma} & sigma value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em k} & k value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em min\+\_\+} & min\+\_\+ value required by the sg.\+segment\+\_\+image function \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceMyTester_a0eb2b65bdc144e87a44a4da58d38cba7}\label{namespaceMyTester_a0eb2b65bdc144e87a44a4da58d38cba7}} 
+\index{My\+Tester@{My\+Tester}!test\+\_\+detection\+\_\+negative\+\_\+rate@{test\+\_\+detection\+\_\+negative\+\_\+rate}}
+\index{test\+\_\+detection\+\_\+negative\+\_\+rate@{test\+\_\+detection\+\_\+negative\+\_\+rate}!My\+Tester@{My\+Tester}}
+\subsubsection{\texorpdfstring{test\+\_\+detection\+\_\+negative\+\_\+rate()}{test\_detection\_negative\_rate()}}
+{\footnotesize\ttfamily def My\+Tester.\+test\+\_\+detection\+\_\+negative\+\_\+rate (\begin{DoxyParamCaption}\item[{}]{img\+\_\+array\+\_\+,  }\item[{}]{sigma,  }\item[{}]{k,  }\item[{}]{min\+\_\+ }\end{DoxyParamCaption})}
+
+
+
+It tests the detection pathway, presuming that all images do not have a S\+NF. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+array} & Array containing all images to be tested. \\
+\hline
+{\em sigma} & sigma value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em k} & k value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em min\+\_\+} & min\+\_\+ value required by the sg.\+segment\+\_\+image function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ratio of negative S\+NF detection over the length of img\+\_\+array 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespaceMyTester_a7676c871b930c3678e168307c05b10ba}\label{namespaceMyTester_a7676c871b930c3678e168307c05b10ba}} 
+\index{My\+Tester@{My\+Tester}!test\+\_\+detection\+\_\+positive\+\_\+rate@{test\+\_\+detection\+\_\+positive\+\_\+rate}}
+\index{test\+\_\+detection\+\_\+positive\+\_\+rate@{test\+\_\+detection\+\_\+positive\+\_\+rate}!My\+Tester@{My\+Tester}}
+\subsubsection{\texorpdfstring{test\+\_\+detection\+\_\+positive\+\_\+rate()}{test\_detection\_positive\_rate()}}
+{\footnotesize\ttfamily def My\+Tester.\+test\+\_\+detection\+\_\+positive\+\_\+rate (\begin{DoxyParamCaption}\item[{}]{img\+\_\+array\+\_\+,  }\item[{}]{sigma,  }\item[{}]{k,  }\item[{}]{min\+\_\+ }\end{DoxyParamCaption})}
+
+
+
+It tests the detection pathway, presuming that all images have a S\+NF. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+array} & Array containing all images to be tested. \\
+\hline
+{\em sigma} & sigma value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em k} & k value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em min\+\_\+} & min\+\_\+ value required by the sg.\+segment\+\_\+image function \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Ratio of positive S\+NF detection over the length of img\+\_\+array 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespaceMyTester_a987df9a91b15345e3a3ed238d19c894f}\label{namespaceMyTester_a987df9a91b15345e3a3ed238d19c894f}} 
+\index{My\+Tester@{My\+Tester}!test\+\_\+detection\+\_\+\+S\+NF@{test\+\_\+detection\+\_\+\+S\+NF}}
+\index{test\+\_\+detection\+\_\+\+S\+NF@{test\+\_\+detection\+\_\+\+S\+NF}!My\+Tester@{My\+Tester}}
+\subsubsection{\texorpdfstring{test\+\_\+detection\+\_\+\+S\+N\+F()}{test\_detection\_SNF()}}
+{\footnotesize\ttfamily def My\+Tester.\+test\+\_\+detection\+\_\+\+S\+NF (\begin{DoxyParamCaption}\item[{}]{img\+\_\+array,  }\item[{}]{sigma,  }\item[{}]{k,  }\item[{}]{min\+\_\+,  }\item[{}]{save\+\_\+or\+\_\+plot = {\ttfamily 1} }\end{DoxyParamCaption})}
+
+
+
+It tests the detection pathway, plot the results or save the result in the Output folder. 
+
+In additional, it measures the time needed to execute such a function. 
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+array} & Array containing all images to be tested. \\
+\hline
+{\em sigma} & sigma value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em k} & k value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em min\+\_\+} & min\+\_\+ value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em save\+\_\+or\+\_\+plot} & Parameter to select if the output will be saved in a folder or plotted 0 -\/ It saves output in a folder 1 -\/ It plots the output \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceMyTester_a6cc53fb240261f322f8f2b311d4c8b9d}\label{namespaceMyTester_a6cc53fb240261f322f8f2b311d4c8b9d}} 
+\index{My\+Tester@{My\+Tester}!test\+\_\+grab\+\_\+cut@{test\+\_\+grab\+\_\+cut}}
+\index{test\+\_\+grab\+\_\+cut@{test\+\_\+grab\+\_\+cut}!My\+Tester@{My\+Tester}}
+\subsubsection{\texorpdfstring{test\+\_\+grab\+\_\+cut()}{test\_grab\_cut()}}
+{\footnotesize\ttfamily def My\+Tester.\+test\+\_\+grab\+\_\+cut (\begin{DoxyParamCaption}\item[{}]{img\+\_\+array }\end{DoxyParamCaption})}
+
+
+
+It tests the function using\+\_\+grab\+\_\+cut for a array of images. 
+
+In additional, it measures the time needed to execute such a function. 
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+array} & Array containing all images to be tested. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceMyTester_a581b270d248a0cd1d06d9b7b508b1a94}\label{namespaceMyTester_a581b270d248a0cd1d06d9b7b508b1a94}} 
+\index{My\+Tester@{My\+Tester}!test\+\_\+seg\+\_\+k\+\_\+m\+\_\+sigma@{test\+\_\+seg\+\_\+k\+\_\+m\+\_\+sigma}}
+\index{test\+\_\+seg\+\_\+k\+\_\+m\+\_\+sigma@{test\+\_\+seg\+\_\+k\+\_\+m\+\_\+sigma}!My\+Tester@{My\+Tester}}
+\subsubsection{\texorpdfstring{test\+\_\+seg\+\_\+k\+\_\+m\+\_\+sigma()}{test\_seg\_k\_m\_sigma()}}
+{\footnotesize\ttfamily def My\+Tester.\+test\+\_\+seg\+\_\+k\+\_\+m\+\_\+sigma (\begin{DoxyParamCaption}\item[{}]{img\+\_\+array }\end{DoxyParamCaption})}
+
+
+
+It tests the segmentation pathway for a array of images, using several combinations of the parameters k, min and sigma . 
+
+In additional, it measures the time needed to execute such a function. 
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+array} & Array containing all images to be tested. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{namespaceMyTester_aca4cd4a6cf37238d7d0c60764a2c0d35}\label{namespaceMyTester_aca4cd4a6cf37238d7d0c60764a2c0d35}} 
+\index{My\+Tester@{My\+Tester}!test\+\_\+segmentation@{test\+\_\+segmentation}}
+\index{test\+\_\+segmentation@{test\+\_\+segmentation}!My\+Tester@{My\+Tester}}
+\subsubsection{\texorpdfstring{test\+\_\+segmentation()}{test\_segmentation()}}
+{\footnotesize\ttfamily def My\+Tester.\+test\+\_\+segmentation (\begin{DoxyParamCaption}\item[{}]{img\+\_\+array,  }\item[{}]{sigma,  }\item[{}]{k,  }\item[{}]{min\+\_\+ }\end{DoxyParamCaption})}
+
+
+
+It tests the segmentation pathway. 
+
+In additional, it measures the time needed to execute such a function. 
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+array} & Array containing all images to be tested. \\
+\hline
+{\em sigma} & sigma value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em k} & k value required by the sg.\+segment\+\_\+image function \\
+\hline
+{\em min\+\_\+} & min\+\_\+ value required by the sg.\+segment\+\_\+image function \\
+\hline
+\end{DoxyParams}

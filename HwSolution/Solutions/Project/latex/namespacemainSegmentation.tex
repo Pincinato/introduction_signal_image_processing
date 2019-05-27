@@ -1,0 +1,165 @@
+\hypertarget{namespacemainSegmentation}{}\section{main\+Segmentation Namespace Reference}
+\label{namespacemainSegmentation}\index{main\+Segmentation@{main\+Segmentation}}
+
+
+This py file is responsible to remove the background noise, to crop the image in the region of interest and to segment the cropped image using a graph based segmentation algorithm.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespacemainSegmentation_a5be74b16e6526522552587323de4d0d0}{find\+\_\+top\+\_\+bottom\+\_\+left\+\_\+right} (img\+\_\+gray)
+\begin{DoxyCompactList}\small\item\em It finds the margins of the image, based on the canny edge detection. \end{DoxyCompactList}\item 
+def \hyperlink{namespacemainSegmentation_a6f3887108c302153d5dc356b7f842709}{find\+\_\+new\+\_\+top\+\_\+bottom} (img\+\_\+gray)
+\begin{DoxyCompactList}\small\item\em It finds the top and bottom margins of the image, based on the canny edge detection. \end{DoxyCompactList}\item 
+def \hyperlink{namespacemainSegmentation_a048b35fc45a496ca097f03e5f435da08}{using\+\_\+grab\+\_\+cut} (top\+\_\+point, bottom\+\_\+point, left\+\_\+point, right\+\_\+point, img\+\_\+gray)
+\begin{DoxyCompactList}\small\item\em It removes the background noise . \end{DoxyCompactList}\item 
+def \hyperlink{namespacemainSegmentation_a616c4fb8355aa80f9c15c59e8fc03580}{crop\+\_\+image} (img\+\_\+, mask)
+\begin{DoxyCompactList}\small\item\em It make crop on an image, based on a mask . \end{DoxyCompactList}\item 
+def \hyperlink{namespacemainSegmentation_ae53d80a4b6e1524938318ad5657e0fad}{enhance\+\_\+contrast} (img\+\_\+gray\+\_\+)
+\begin{DoxyCompactList}\small\item\em It enhance the contrast. \end{DoxyCompactList}\item 
+def \hyperlink{namespacemainSegmentation_a909ab2c584028411a47d9d36dc5b484e}{segment\+\_\+image} (img\+\_\+gray, sigma=3, k=200, min\+\_\+=50, debug=0)
+\begin{DoxyCompactList}\small\item\em It segment an image, based on graph-\/based approach. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{namespacemainSegmentation_a6fb0b020cafc5eb344270fa5b3598e28}\label{namespacemainSegmentation_a6fb0b020cafc5eb344270fa5b3598e28}} 
+int {\bfseries D\+E\+B\+UG} = 1
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+This py file is responsible to remove the background noise, to crop the image in the region of interest and to segment the cropped image using a graph based segmentation algorithm. 
+
+\begin{DoxyAuthor}{Author}
+Thiago Pincinato and Tamara Melle 
+\end{DoxyAuthor}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{namespacemainSegmentation_a616c4fb8355aa80f9c15c59e8fc03580}\label{namespacemainSegmentation_a616c4fb8355aa80f9c15c59e8fc03580}} 
+\index{main\+Segmentation@{main\+Segmentation}!crop\+\_\+image@{crop\+\_\+image}}
+\index{crop\+\_\+image@{crop\+\_\+image}!main\+Segmentation@{main\+Segmentation}}
+\subsubsection{\texorpdfstring{crop\+\_\+image()}{crop\_image()}}
+{\footnotesize\ttfamily def main\+Segmentation.\+crop\+\_\+image (\begin{DoxyParamCaption}\item[{}]{img\+\_\+,  }\item[{}]{mask }\end{DoxyParamCaption})}
+
+
+
+It make crop on an image, based on a mask . 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+gray} & original image. \\
+\hline
+{\em mask} & used to make a crop. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cropped image. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacemainSegmentation_ae53d80a4b6e1524938318ad5657e0fad}\label{namespacemainSegmentation_ae53d80a4b6e1524938318ad5657e0fad}} 
+\index{main\+Segmentation@{main\+Segmentation}!enhance\+\_\+contrast@{enhance\+\_\+contrast}}
+\index{enhance\+\_\+contrast@{enhance\+\_\+contrast}!main\+Segmentation@{main\+Segmentation}}
+\subsubsection{\texorpdfstring{enhance\+\_\+contrast()}{enhance\_contrast()}}
+{\footnotesize\ttfamily def main\+Segmentation.\+enhance\+\_\+contrast (\begin{DoxyParamCaption}\item[{}]{img\+\_\+gray\+\_\+ }\end{DoxyParamCaption})}
+
+
+
+It enhance the contrast. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+gray} & original image. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+image with better contrast. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacemainSegmentation_a6f3887108c302153d5dc356b7f842709}\label{namespacemainSegmentation_a6f3887108c302153d5dc356b7f842709}} 
+\index{main\+Segmentation@{main\+Segmentation}!find\+\_\+new\+\_\+top\+\_\+bottom@{find\+\_\+new\+\_\+top\+\_\+bottom}}
+\index{find\+\_\+new\+\_\+top\+\_\+bottom@{find\+\_\+new\+\_\+top\+\_\+bottom}!main\+Segmentation@{main\+Segmentation}}
+\subsubsection{\texorpdfstring{find\+\_\+new\+\_\+top\+\_\+bottom()}{find\_new\_top\_bottom()}}
+{\footnotesize\ttfamily def main\+Segmentation.\+find\+\_\+new\+\_\+top\+\_\+bottom (\begin{DoxyParamCaption}\item[{}]{img\+\_\+gray }\end{DoxyParamCaption})}
+
+
+
+It finds the top and bottom margins of the image, based on the canny edge detection. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+gray} & original image. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(Top\+\_\+point, Bottom\+\_\+point). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacemainSegmentation_a5be74b16e6526522552587323de4d0d0}\label{namespacemainSegmentation_a5be74b16e6526522552587323de4d0d0}} 
+\index{main\+Segmentation@{main\+Segmentation}!find\+\_\+top\+\_\+bottom\+\_\+left\+\_\+right@{find\+\_\+top\+\_\+bottom\+\_\+left\+\_\+right}}
+\index{find\+\_\+top\+\_\+bottom\+\_\+left\+\_\+right@{find\+\_\+top\+\_\+bottom\+\_\+left\+\_\+right}!main\+Segmentation@{main\+Segmentation}}
+\subsubsection{\texorpdfstring{find\+\_\+top\+\_\+bottom\+\_\+left\+\_\+right()}{find\_top\_bottom\_left\_right()}}
+{\footnotesize\ttfamily def main\+Segmentation.\+find\+\_\+top\+\_\+bottom\+\_\+left\+\_\+right (\begin{DoxyParamCaption}\item[{}]{img\+\_\+gray }\end{DoxyParamCaption})}
+
+
+
+It finds the margins of the image, based on the canny edge detection. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+gray} & original image. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+(Top\+\_\+point, Bottom\+\_\+point, Left\+\_\+point, Right\+\_\+point\+True). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacemainSegmentation_a909ab2c584028411a47d9d36dc5b484e}\label{namespacemainSegmentation_a909ab2c584028411a47d9d36dc5b484e}} 
+\index{main\+Segmentation@{main\+Segmentation}!segment\+\_\+image@{segment\+\_\+image}}
+\index{segment\+\_\+image@{segment\+\_\+image}!main\+Segmentation@{main\+Segmentation}}
+\subsubsection{\texorpdfstring{segment\+\_\+image()}{segment\_image()}}
+{\footnotesize\ttfamily def main\+Segmentation.\+segment\+\_\+image (\begin{DoxyParamCaption}\item[{}]{img\+\_\+gray,  }\item[{}]{sigma = {\ttfamily 3},  }\item[{}]{k = {\ttfamily 200},  }\item[{}]{min\+\_\+ = {\ttfamily 50},  }\item[{}]{debug = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+It segment an image, based on graph-\/based approach. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img\+\_\+gray} & original image. \\
+\hline
+{\em sigma} & sigma used in the segment algorithm (determines the amount smooth). \\
+\hline
+{\em k} & k used in the segment algorithm (determines the how big the regions will be). \\
+\hline
+{\em min\+\_\+} & min\+\_\+ used in the segment algorithm (determines the minimum criteria to merge to graphs). \\
+\hline
+{\em debug} & parameters determines if there will be plots of the segmentation process or not. 0 -\/ no plot. 1-\/ plots \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+out(segmented image) , cropped\+\_\+image(original image without background and cropped) , cropped\+\_\+mask ( mask used to crop image) 
+\end{DoxyReturn}
+\mbox{\Hypertarget{namespacemainSegmentation_a048b35fc45a496ca097f03e5f435da08}\label{namespacemainSegmentation_a048b35fc45a496ca097f03e5f435da08}} 
+\index{main\+Segmentation@{main\+Segmentation}!using\+\_\+grab\+\_\+cut@{using\+\_\+grab\+\_\+cut}}
+\index{using\+\_\+grab\+\_\+cut@{using\+\_\+grab\+\_\+cut}!main\+Segmentation@{main\+Segmentation}}
+\subsubsection{\texorpdfstring{using\+\_\+grab\+\_\+cut()}{using\_grab\_cut()}}
+{\footnotesize\ttfamily def main\+Segmentation.\+using\+\_\+grab\+\_\+cut (\begin{DoxyParamCaption}\item[{}]{top\+\_\+point,  }\item[{}]{bottom\+\_\+point,  }\item[{}]{left\+\_\+point,  }\item[{}]{right\+\_\+point,  }\item[{}]{img\+\_\+gray }\end{DoxyParamCaption})}
+
+
+
+It removes the background noise . 
+
+
+\begin{DoxyParams}{Parameters}
+{\em top\+\_\+point} & the most top point where below all foreground pixels can be found. \\
+\hline
+{\em bottom\+\_\+point} & the most bottom point where above all foreground pixels can be found. \\
+\hline
+{\em left\+\_\+point} & the most left point where on the right all foreground pixels can be found. \\
+\hline
+{\em right\+\_\+point} & the most right point where on the left all foreground pixels can be found. \\
+\hline
+{\em img\+\_\+gray} & original image. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+image without background noise. 
+\end{DoxyReturn}

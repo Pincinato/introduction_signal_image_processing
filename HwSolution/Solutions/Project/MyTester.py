@@ -1,14 +1,23 @@
+## @package MyTester
+#  My Tester aims to test the principal functions of the project.
+#  Those test consist of routine calls, time measurement and parameters deviations
+# @author Thiago Pincinato and Tamara Melle
+
 import numpy as np
 import matplotlib.pyplot as plt
 import time
 import mainSegmentation as sg
 import DetectionSNF as dt
 import utils
-from skimage import feature
 import cv2
 
-# testing grab cut
+## It tests the function using_grab_cut for a array of images.
+# In additional, it measures the time needed to execute such a function.
+    #  @param img_array Array containing all images to be tested.
+
+
 def test_grab_cut(img_array):
+    j = 1
     for i in np.arange(img_array.__len__()):
         print("image "+str(i+1)+"/"+str(img_array.__len__()))
         start_time = time.time()
@@ -16,11 +25,21 @@ def test_grab_cut(img_array):
             img_gray = img_array[i][:, :, 0]
         else:
             img_gray = img_array[i]
+        plt.figure(i+j)
+        j = j+1
         (top, bottom, left, right) = sg.find_top_bottom_left_right(img_gray)
-        sg.using_grab_cut(top, bottom, left, right, img_gray)
+        mask = sg.using_grab_cut(top, bottom, left, right, img_gray)
+        cropped_ = sg.crop_image(img_gray, mask)
+        plt.figure(i+j)
+        plt.imshow(cropped_,cmap='gray')
+        j = j+1
         elapsed_time = time.time() - start_time
         print("Execution time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(int(elapsed_time % 60)) + " seconds")
         print("image "+str(i+1)+"/"+str(img_array.__len__())+" done")
+
+## It tests the segmentation pathway for a array of images, using several combinations of the parameters k, min and sigma .
+# In additional, it measures the time needed to execute such a function.
+    #  @param img_array Array containing all images to be tested.
 
 
 def test_seg_k_m_sigma(img_array):
@@ -52,6 +71,12 @@ def test_seg_k_m_sigma(img_array):
         print("image " + str(i + 1) + "/" + str(img_array.__len__()) + " done")
 
 
+## It tests the segmentation pathway.
+# In additional, it measures the time needed to execute such a function.
+    #  @param img_array Array containing all images to be tested.
+    #  @param sigma sigma value required by the sg.segment_image function
+    #  @param k k value required by the sg.segment_image function
+    #  @param min_ min_ value required by the sg.segment_image function
 
 
 def test_segmentation(img_array, sigma, k, min_):
@@ -83,7 +108,15 @@ def test_segmentation(img_array, sigma, k, min_):
         j = j + 2
 
 
-def test_detection(img_array, sigma, k , min_):
+## It tests the detection pathway.
+# In additional, it measures the time needed to execute such a function.
+    #  @param img_array Array containing all images to be tested.
+    #  @param sigma sigma value required by the sg.segment_image function
+    #  @param k k value required by the sg.segment_image function
+    #  @param min_ min_ value required by the sg.segment_image function
+
+
+def test_detection(img_array, sigma, k, min_):
     detection_result =[]
     for i in np.arange(img_array.__len__()):
         print("image " + str(i + 1) + "/" + str(img_array.__len__()))
@@ -104,9 +137,24 @@ def test_detection(img_array, sigma, k , min_):
     return detection_result
 
 
-def test_detection_positive_rate(img_array_, sigma, k , min_):
+## It tests the detection pathway, presuming that all images have a SNF.
+    #  @param img_array Array containing all images to be tested.
+    #  @param sigma sigma value required by the sg.segment_image function
+    #  @param k k value required by the sg.segment_image function
+    #  @param min_ min_ value required by the sg.segment_image function
+    #  @return Ratio of positive SNF detection over the length of img_array
+
+def test_detection_positive_rate(img_array_, sigma, k, min_):
     images_with_SRF = test_detection(img_array_, sigma, k , min_)
     return np.sum(images_with_SRF) / (img_array_.__len__())
+
+
+## It tests the detection pathway, presuming that all images do not have a SNF.
+    #  @param img_array Array containing all images to be tested.
+    #  @param sigma sigma value required by the sg.segment_image function
+    #  @param k k value required by the sg.segment_image function
+    #  @param min_ min_ value required by the sg.segment_image function
+    #  @return Ratio of negative SNF detection over the length of img_array
 
 
 def test_detection_negative_rate(img_array_, sigma, k , min_):
@@ -114,14 +162,26 @@ def test_detection_negative_rate(img_array_, sigma, k , min_):
     return ((img_array_.__len__()) - np.sum(images_with_NoSRF)) / (img_array_.__len__())
 
 
-def test_dection_SNF(img_array, sigma, k, min_, save_or_plot=1):
-    for i in np.arange(img_array.__len__()):
+## It tests the detection pathway, plot the results or save the result in the Output folder.
+# In additional, it measures the time needed to execute such a function.
+    #  @param img_array Array containing all images to be tested.
+    #  @param sigma sigma value required by the sg.segment_image function
+    #  @param k k value required by the sg.segment_image function
+    #  @param min_ min_ value required by the sg.segment_image function
+    #  @param save_or_plot Parameter to select if the output will be saved in a folder or plotted
+#  0 - It saves output in a folder
+#  1 - It plots the output
+
+
+def test_detection_SNF(img_array, sigma, k, min_, save_or_plot=0):
+    i = 0
+    for actual_image in img_array:
         print("image " + str(i + 1) + "/" + str(img_array.__len__()))
         start_time = time.time()
-        if len(img_array[i].shape) == 3:
-            img_gray = img_array[i][:, :, 0]
+        if len(actual_image.shape) == 3:
+            img_gray = actual_image[:, :, 0]
         else:
-            img_gray = img_array[i]
+            img_gray = actual_image
         # Segmentation part -> to have plots , debug = 1
         (seg_image, cropped_image, grabcut_mask) = sg.segment_image(img_gray, sigma, k, min_)
         elapsed_time = time.time() - start_time
@@ -155,7 +215,8 @@ def test_dection_SNF(img_array, sigma, k, min_, save_or_plot=1):
             output_img[:, :, 0] = cropped_image
             output_img[:, :, 1] = cropped_image
             output_img[:, :, 2] = new_mask
-            cv2.imwrite("OutputImages/output_image-" + str(i) + ".jpg",output_img)
+            cv2.imwrite("OutputImages/output_image_new-" + str(i) + ".jpg",output_img)
         elapsed_time = time.time() - start_time
         print("Classification time: " + str(int(elapsed_time / 60)) + " minute(s) and " + str(int(elapsed_time % 60)) + " seconds")
         print("image "+str(i+1)+"/"+str(img_array.__len__())+" done")
+        i = i+1

@@ -1,3 +1,9 @@
+## @package GraphBasedTest
+#  Documentation for this module.
+#  More details.
+# @author Ghassem Alaee
+# modified by Thiago Pincinato and Tamara Melle
+
 from disjoint_set import *
 import math
 import numpy as np

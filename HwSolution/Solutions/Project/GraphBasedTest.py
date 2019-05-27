@@ -1,13 +1,4 @@
-from scipy import ndimage
-import matplotlib.pyplot as plt
-import scipy
-import numpy as np
-from scipy.misc import imread
-from segment_graph import *
-
-
-
-# --------------------------------------------------------------------------------
+## @package GraphBasedTest
 # Segment an image:
 # Returns a color image representing the segmentation.
 #
@@ -17,9 +8,14 @@ from segment_graph import *
 #           k: constant for threshold function.
 #           min_size: minimum component size (enforced by post-processing stage).
 #
-# Returns:
-#           num_ccs: number of connected components in the segmentation.
-# --------------------------------------------------------------------------------
+# Returns: number of connected components in the segmentation.
+# @author Ghassem Alaee, modified by Thiago Pincinato and Tamara Melle
+
+from scipy import ndimage
+import scipy
+from segment_graph import *
+
+
 def segment(in_image, sigma, k, min_size):
     height, width, band = in_image.shape
     print("Height:  " + str(height))
